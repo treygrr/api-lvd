@@ -1,0 +1,1 @@
+docker exec lvda-nginx bash -c "rm -R ./app/lvda"

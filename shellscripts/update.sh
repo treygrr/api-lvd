@@ -1,0 +1,1 @@
+docker exec lvda-nginx bash -c "cd ../app && composer install"
