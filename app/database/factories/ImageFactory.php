@@ -24,8 +24,7 @@ class ImageFactory extends Factory
     public function definition()
     {
         return [
-            'filename' => $this->faker->word(),
-            'extension' => $this->faker->fileExtension(),
+            'path' => $this->faker->word(),
             'blog_id' => $this->faker->randomElement($this->blogs::all()->pluck('id')),
             'alt' => $this->faker->sentence(),
         ];

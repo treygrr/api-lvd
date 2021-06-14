@@ -15,8 +15,8 @@ class Image extends Model
      * @var array
      */
     protected $fillable = [
+        'path',
         'filename',
-        'extension',
         'blog_id',
         'alt',
     ];

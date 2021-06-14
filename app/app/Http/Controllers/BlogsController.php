@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\Blog;
+use App\Models\Image;
+use App\Models\Tag;
+
+use Illuminate\Support\Facades\Validator;
 
 class BlogsController extends Controller
 {
@@ -15,17 +18,7 @@ class BlogsController extends Controller
      */
     public function index()
     {
-        return Blog::with('tags')->with('image')->paginate(5);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Blog::with('tags')->with('user')->with('image')->orderBy('id', 'DESC')->paginate(20);
     }
 
     /**
@@ -35,8 +28,45 @@ class BlogsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        Validator::make($request->all(), [
+            'user' => 'required',
+            'image_alt' => 'required',
+            'title' => 'required|unique:blogs,title',
+            'tags' => 'required',
+            'content' => 'required',
+            'image' => 'required',
+        ])->validate();
+        
+        $blog = Blog::create(
+            [
+                'author' => $request->input('user'),
+                'title' => $request->input('title'),
+                'content' => $request->input('content')
+            ]
+        );
+
+
+        $imagePath = $request->file('image')->store('blog_images');
+
+        Image::create(
+            [
+                'path' => $imagePath,
+                'alt' => $request->input('image_alt'),
+                'blog_id' => $blog->id,
+            ]
+        );
+
+        $tags = explode(',', $request->input('tags'));
+        
+        foreach ($tags as $tag) {
+            Tag::create([
+                'tag' => $tag,
+                'blog_id' => $blog->id
+            ]);
+        }
+
+        return $blog;
     }
 
     /**
@@ -47,21 +77,7 @@ class BlogsController extends Controller
      */
     public function show($id)
     {
-        $return = Blog::whereId($id)->with('tags')->with('image')->first();
-        $return->user;
-        return $return;
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return Blog::with('tags')->with('user')->with('image')->find($id);
     }
 
     /**
@@ -73,7 +89,44 @@ class BlogsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Validator::make($request->all(), [
+            'user' => 'required',
+            'image_alt' => 'required',
+            'title' => 'required',
+            'tags' => 'required',
+            'content' => 'required',
+        ])->validate();
+
+        $blog = Blog::find($id);
+
+        $blog->author = $request->input('user');
+        $blog->title = $request->input('title');
+        $blog->content = $request->input('content');
+
+        $blog->save();
+
+        // $imagePath = $request->file('image')->store('blog_images');
+
+        // Image::find('blog_id', $id);
+        
+        // (
+        //     [
+        //         'path' => $imagePath,
+        //         'alt' => $request->input('image_alt'),
+        //         'blog_id' => $blog->id,
+        //     ]
+        // );
+
+        // $tags = explode(',', $request->input('tags'));
+        
+        // foreach ($tags as $tag) {
+        //     Tag::findOrCreate([
+        //         'tag' => $tag,
+        //         'blog_id' => $blog->id
+        //     ]);
+        // }
+
+        return $blog;
     }
 
     /**
@@ -84,6 +137,8 @@ class BlogsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Image::where('blog_id', $id)->delete();
+        Tag::where('blog_id', $id)->delete();
+        return Blog::find($id)->delete();
     }
 }

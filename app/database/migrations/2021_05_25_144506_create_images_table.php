@@ -15,8 +15,7 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string('filename');
-            $table->string('extension');
+            $table->string('path');
             $table->string('alt');
             $table->bigInteger('blog_id');
             $table->foreign('blog_id')->references('id')->on('blogs')->dropUnique();

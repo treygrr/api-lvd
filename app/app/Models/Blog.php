@@ -10,6 +10,8 @@ class Blog extends Model
     use HasFactory;
 
     protected $hidden = ['author'];
+    
+    protected $fillable = ['content', 'title', 'author'];
 
     public function user()
     {
