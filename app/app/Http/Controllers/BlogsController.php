@@ -18,7 +18,7 @@ class BlogsController extends Controller
      */
     public function index()
     {
-        return Blog::with('tags')->with('user')->with('image')->orderBy('id', 'DESC')->paginate(20);
+        return Blog::with('tags')->with('user')->with('image')->orderBy('id', 'ASC')->paginate(20);
     }
 
     /**
