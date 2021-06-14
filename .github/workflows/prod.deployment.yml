@@ -25,7 +25,7 @@ jobs:
       - name: ssh pipeline 1
         uses: cross-the-world/ssh-pipeline@master
         env:
-          DIR1: "/home/pi/trey/fe-lvd/prod"
+          DIR1: "/home/pi/trey/api-lvd/prod"
         with:
           host: ${{ secrets.SSH_HOST_NAME }}
           user: ${{ secrets.SSH_USERNAME}}
@@ -36,4 +36,5 @@ jobs:
             cd $DIR1 
             ls -la
             git pull
-            sudo quasar build spa
+            cd app
+            php artisan storage:link
