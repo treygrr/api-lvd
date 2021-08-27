@@ -15,7 +15,7 @@ return [
 
     'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
         '%s%s',
-        'dev.frontend.lavida.dev,staging.frontend.lavida.dev,lavida.dev,https://dev.frontend.lavida.dev,https://staging.frontend.lavida.dev,https://lavida.dev,',
+        'dev.demo.diesellaptops.com,staging.demo.diesellaptops.com,production.diesellaptops.com,https://dev.demo.diesellaptops.com,https://staging.demo.diesellaptops.com,https://production.diesellaptops.com,dev.frontend.lavida.dev,staging.frontend.lavida.dev,lavida.dev,https://dev.frontend.lavida.dev,https://staging.frontend.lavida.dev,https://lavida.dev,',
         env('APP_URL') ? ','.parse_url(env('APP_URL'), PHP_URL_HOST) : ''
     ))),
 
